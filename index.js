@@ -342,15 +342,15 @@ class Lawn{
             leftLawnGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-columns * cellWidth, -leftLawnGeo.parameters.height/2, 0));
             rightLawnGeo.applyMatrix(new THREE.Matrix4().makeTranslation(columns * cellWidth, -rightLawnGeo.parameters.height/2, 0));
             middleLawnGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0, -middleLawnGeo.parameters.height/2, 0));
-            let side = new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries([leftLawnGeo, rightLawnGeo]), new THREE.MeshPhongMaterial({color: 0x598800}));
+            let side = new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries([leftLawnGeo, rightLawnGeo]), new THREE.MeshPhongMaterial({color: 0x2E8B57}));
             this.model.add(side);
-            let center = new THREE.Mesh(middleLawnGeo, new THREE.MeshPhongMaterial({color: 0x78AE00}));
+            let center = new THREE.Mesh(middleLawnGeo, new THREE.MeshPhongMaterial({color: 0x228B22}));
             center.receiveShadow = true;
             this.model.add(center);
         } else{
             let geometry = new THREE.BoxBufferGeometry(cellWidth * columns * 3, cellWidth, cellWidth);
             geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, -geometry.parameters.height/2, 0));
-            this.model = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x598800}));
+            this.model = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x006400}));
         }
         return this.model;
     }
@@ -366,9 +366,9 @@ class River{
         leftRiverGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-columns * cellWidth, -leftRiverGeo.parameters.height/2 - cellWidth/4, 0));
         rightRiverGeo.applyMatrix(new THREE.Matrix4().makeTranslation(columns * cellWidth, -rightRiverGeo.parameters.height/2 - cellWidth/4, 0));
         middleRiverGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0, -middleRiverGeo.parameters.height/2 - cellWidth/4, 0));
-        let side = new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries([leftRiverGeo, rightRiverGeo]), new THREE.MeshPhongMaterial({color: 0x17A7CB}));
+        let side = new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries([leftRiverGeo, rightRiverGeo]), new THREE.MeshPhongMaterial({color: 0x8D2E16}));
         this.model.add(side);
-        let center = new THREE.Mesh(middleRiverGeo, new THREE.MeshPhongMaterial({color: 0x46CFE1}));
+        let center = new THREE.Mesh(middleRiverGeo, new THREE.MeshPhongMaterial({color: 0xd04421}));
         //center.receiveShadow = true;
         this.model.add(center);
 
@@ -379,7 +379,7 @@ class River{
             plane.applyMatrix(new THREE.Matrix4().makeTranslation(i%2? -cellWidth/8 : cellWidth/8, 0, (i - 1.5) * cellWidth/4));
             planes.push(plane);
         }
-        let planeLeft = new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(planes), new THREE.MeshBasicMaterial({color: 0xeeeeee})), planeRight = planeLeft.clone();
+        let planeLeft = new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(planes), new THREE.MeshBasicMaterial({color: 0x47170B})), planeRight = planeLeft.clone();
         planeLeft.position.set(-columns * cellWidth/2, -cellWidth/4, 0);
         this.model.add(planeLeft);
         planeRight.position.set(columns * cellWidth/2, -cellWidth/4, 0);
@@ -705,66 +705,49 @@ class Tree{
     }
 }
 
-//creates logs
-class Log{
-    constructor(size = {x: 0.95, y: 1, z: 0.8}){
+class Log {
+    constructor(size = { x: 0.95, y: 1, z: 0.8 }) {
         this.model = new THREE.Group();
-        let whiteMeshes = [], lightMeshes = [], darkMeshes = [];
-        let offset = 1;
-        let middle = new THREE.BoxBufferGeometry(3.6, 0.25, 1.2),
-            front = new THREE.BoxBufferGeometry(3.6, 0.5, 0.2),
-            back = new THREE.BoxBufferGeometry(3.6, 0.5, 0.2);
-        middle.applyMatrix(new THREE.Matrix4().makeTranslation(offset, -middle.parameters.height/2, 0));
-        front.applyMatrix(new THREE.Matrix4().makeTranslation(offset, -front.parameters.height/2, front.parameters.depth/2 - middle.parameters.depth/2));
-        back.applyMatrix(new THREE.Matrix4().makeTranslation(offset, -back.parameters.height/2, -back.parameters.depth/2 + middle.parameters.depth/2));
-        lightMeshes.push(middle);
-        lightMeshes.push(front);
-        lightMeshes.push(back);
-        this.model.add(new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(lightMeshes), new THREE.MeshLambertMaterial({color: 0x8d5358})));
 
-        let middle1 = new THREE.BoxBufferGeometry(0.2, 0.25, 1.2),
-            front1 = new THREE.BoxBufferGeometry(0.2, 0.5, 0.2),
-            back1 = new THREE.BoxBufferGeometry(0.2, 0.5, 0.2),
-            middle2 = new THREE.BoxBufferGeometry(0.2, 0.25, 1.2),
-            front2 = new THREE.BoxBufferGeometry(0.2, 0.5, 0.2),
-            back2 = new THREE.BoxBufferGeometry(0.2, 0.5, 0.2);
-        middle1.applyMatrix(new THREE.Matrix4().makeTranslation(-middle1.parameters.width/2 - middle.parameters.width/2 + offset, -middle1.parameters.height/2, 0));
-        front1.applyMatrix(new THREE.Matrix4().makeTranslation(-front1.parameters.width/2 - middle.parameters.width/2 + offset, -front1.parameters.height/2, front1.parameters.depth/2 - middle1.parameters.depth/2));
-        back1.applyMatrix(new THREE.Matrix4().makeTranslation(-back1.parameters.width/2 - middle.parameters.width/2 + offset, -back1.parameters.height/2, -back1.parameters.depth/2 + middle1.parameters.depth/2));
-        middle2.applyMatrix(new THREE.Matrix4().makeTranslation(middle2.parameters.width/2 + middle.parameters.width/2 + offset, -middle2.parameters.height/2, 0));
-        front2.applyMatrix(new THREE.Matrix4().makeTranslation(front2.parameters.width/2 + middle.parameters.width/2 + offset, -front2.parameters.height/2, front2.parameters.depth/2 - middle2.parameters.depth/2));
-        back2.applyMatrix(new THREE.Matrix4().makeTranslation(back2.parameters.width/2 + middle.parameters.width/2 + offset, -back2.parameters.height/2, -back2.parameters.depth/2 + middle2.parameters.depth/2));
-        whiteMeshes.push(middle1);
-        whiteMeshes.push(front1);
-        whiteMeshes.push(back1);
-        whiteMeshes.push(middle2);
-        whiteMeshes.push(front2);
-        whiteMeshes.push(back2);
-        this.model.add(new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(whiteMeshes), new THREE.MeshLambertMaterial({color: 0xefb9be})));
+        // Define the shape for the trapezoidal prism
+        const shape = new THREE.Shape();
+        const widthTop = 3.2; // Smaller top width for more angle
+        const widthBottom = 3.6; // Bottom width
+        const height = 0.5; // Height of the log
+        const depth = 1.2; // Depth of the log
 
-        let patternPositions = [
-            [0, 0, 0, 1, 1, 1, 1, 1, 1, 0],
-            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            [0, 1, 0, 0, 1, 1, 1, 1, 0, 0],
-            [0, 1, 1, 0, 1, 0, 0, 0, 0, 0]
-        ];
-        for(let row = 0; row < patternPositions.length; ++row){
-            let zPos = row * 0.3 - 0.45;
-            for(let column = 0; column < patternPositions[row].length; ++column){
-                let xPos = column * 0.4 - 1.8;
-                if (patternPositions[row][column]){
-                    let cube = new THREE.BoxBufferGeometry(0.4, 0.02, 0.3);
-                    cube.applyMatrix(new THREE.Matrix4().makeTranslation(xPos + offset, 0, zPos));
-                    darkMeshes.push(cube);
-                }
-            }
-        }
-        this.model.add(new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(darkMeshes), new THREE.MeshLambertMaterial({color: 0x491025})));
+        shape.moveTo(-widthBottom / 2, 0); // Bottom left corner
+        shape.lineTo(widthBottom / 2, 0); // Bottom right corner
+        shape.lineTo(widthTop / 2, height); // Top right corner
+        shape.lineTo(-widthTop / 2, height); // Top left corner
+        shape.lineTo(-widthBottom / 2, 0); // Close the shape
 
+        // Extrude the shape to create the 3D geometry
+        const extrudeSettings = {
+            depth: depth,
+            bevelEnabled: false
+        };
+        const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+
+        // Center the geometry
+        geometry.center();
+
+        // Create the mesh with gold material
+        const material = new THREE.MeshLambertMaterial({ color: 0xd4af37 });
+        const logMesh = new THREE.Mesh(geometry, material);
+
+        // Add the mesh to the model
+        this.model.add(logMesh);
+
+        // Scale the model to the desired size
         this.model.scale.set(size.x, size.y, size.z);
+
         return this.model;
     }
 }
+
+
+
 
 //creates animated feathers
 class Feathers{
@@ -839,7 +822,7 @@ class Splash{
         this.coordinates.forEach(() =>{
             let size = 0.25 + Math.random() * 0.25;
             let geo = new THREE.BoxBufferGeometry(size, size, size);
-            let mat = new THREE.MeshLambertMaterial({color: 0x46CFE1});
+            let mat = new THREE.MeshLambertMaterial({color: 0x8D2E16});
             let splash = new THREE.Mesh(geo, mat);
             splash.visible = false;
             scene.add(splash);
